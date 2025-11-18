@@ -1,4 +1,4 @@
-# MarketSphere - E-Commerce Platform
+# Planet Price - E-Commerce Platform
 
 A full-featured, production-ready e-commerce web application built with Django REST Framework and React. MarketSphere provides a complete marketplace solution with buyer and seller functionalities, internationalization support, and a modern, responsive UI.
 
