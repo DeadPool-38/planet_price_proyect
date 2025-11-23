@@ -213,10 +213,9 @@ else:
 SECURE_REFERRER_POLICY = 'same-origin'
 
 # Configuración para PythonAnywhere y producción
-from decouple import config, Csv
-
 # Base de datos MySQL para producción
 if not DEBUG:
+    from decouple import config, Csv
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
