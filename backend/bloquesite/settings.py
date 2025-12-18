@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -88,12 +89,12 @@ WSGI_APPLICATION = "bloquesite.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
 }
 
 
@@ -215,17 +216,6 @@ else:
 
 # Additional Security Headers
 SECURE_REFERRER_POLICY = 'same-origin'
-
-# Configuración para PythonAnywhere y producción
-# Base de datos MySQL para producción
-if not DEBUG:
-    DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
 
 # Whitenoise para archivos estáticos en producción
 if 'whitenoise.middleware.WhiteNoiseMiddleware' not in MIDDLEWARE:
