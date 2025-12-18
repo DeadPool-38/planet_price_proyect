@@ -32,7 +32,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 # For production, set environment variable: ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
-ALLOWED_HOSTS = ['.vercel.app', 'now.sh', '127.0.0.1', 'localhost', "planetpriceproyectok.vercel.app"]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
 
 
 # Application definition
@@ -54,11 +54,11 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -170,10 +170,11 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-# CORS Configuration (for React frontend)
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
+    "http://localhost:5173", # Vite default
+    "https://planetpriceproyectok.vercel.app", # Add your Vercel URL after first deploy
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -218,20 +219,13 @@ SECURE_REFERRER_POLICY = 'same-origin'
 # Configuración para PythonAnywhere y producción
 # Base de datos MySQL para producción
 if not DEBUG:
-    from decouple import config, Csv
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': config('DB_NAME', default=''),
-            'USER': config('DB_USER', default=''),
-            'PASSWORD': config('DB_PASSWORD', default=''),
-            'HOST': config('DB_HOST', default=''),
-            'PORT': '3306',
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            },
-        }
-    }
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
 
 # Whitenoise para archivos estáticos en producción
 if 'whitenoise.middleware.WhiteNoiseMiddleware' not in MIDDLEWARE:
