@@ -2,50 +2,31 @@
   "version": 2,
   "builds": [
     {
-      "src": "backend/bloquesite/wsgi.py",
+      "src": "api/index.py",
       "use": "@vercel/python",
       "config": {
-        "maxLambdaSize": "15mb",
-        "runtime": "python3.9",
-        "includeFiles": [
-          "backend/**/*",
-          "!__pycache__/**"
-        ]
+        "maxLambdaSize": "15mb"
       }
     },
     {
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "frontend/build",
-        "installCommand": "cd frontend && npm install --loglevel verbose",
-        "buildCommand": "cd frontend && npm run build"
+        "distDir": "build"
       }
     }
   ],
   "routes": [
     {
-      "src": "/api/(?<path>.*)",
-      "dest": "backend/bloquesite/wsgi.py"
+      "handle": "filesystem"
     },
     {
-      "src": "/static/(?<file>.*)",
-      "dest": "frontend/build/static/$file"
+      "src": "/api/(.*)",
+      "dest": "api/index.py"
     },
     {
-      "src": "/(?<path>.*)",
-      "dest": "frontend/build/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
-  ],
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  },
-  "functions": {
-    "backend/bloquesite/wsgi.py": {
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  }
+  ]
 }
