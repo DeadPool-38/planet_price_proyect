@@ -3,11 +3,20 @@
   "builds": [
     {
       "src": "backend/bloquesite/wsgi.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.9"
+      }
     },
     {
       "src": "frontend/package.json",
-      "use": "@vercel/static-build"
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "build",
+        "installCommand": "cd frontend && npm install",
+        "buildCommand": "cd frontend && npm run build"
+      }
     }
   ],
   "routes": [
@@ -16,8 +25,12 @@
       "dest": "backend/bloquesite/wsgi.py"
     },
     {
+      "src": "/static/(.*)",
+      "dest": "frontend/build/static/$1"
+    },
+    {
       "src": "/(.*)",
-      "dest": "frontend/$1"
+      "dest": "frontend/build/index.html"
     }
   ]
 }

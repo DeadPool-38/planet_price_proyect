@@ -90,11 +90,7 @@ WSGI_APPLICATION = "bloquesite.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    'default': dj_database_url.parse("postgresql://postgres.fopiskqlywjojotqauif:eDjRg3s1EyJcYNIQSJ5ziWtxcg76Ox2kg4DMC49W@aws-1-us-east-1.pooler.supabase.com:5432/postgres")
 }
 
 
